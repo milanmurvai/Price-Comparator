@@ -4,6 +4,7 @@ import eu.accesa.price_comparator.model.Discount;
 import eu.accesa.price_comparator.model.Product;
 import eu.accesa.price_comparator.model.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,4 +23,9 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
     List<Discount> findAllByStoreAndProductAndFromDateAfterAndToDateBefore(
             Store store, Product product, LocalDate fromExclusive, LocalDate toExclusive);
+
+    @Query("SELECT d FROM Discount d WHERE d.product = :product AND d.store = :store " +
+            "AND :date BETWEEN d.fromDate AND d.toDate")
+    Optional<Discount> findActiveDiscount(Product product, Store store, LocalDate date);
+
 }
