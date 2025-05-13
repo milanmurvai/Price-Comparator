@@ -29,7 +29,17 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
             "AND :date BETWEEN d.fromDate AND d.toDate")
     Optional<Discount> findActiveDiscount(Product product, Store store, LocalDate date);
 
-    @Query("SELECT d FROM Discount d WHERE :date BETWEEN d.fromDate AND d.toDate ORDER BY d.percentage DESC")
-    List<Discount> findActiveDiscountsOrderedByPercentageDesc(@Param("date") LocalDate date);
+    List<Discount> findAllByImportedDate(LocalDate today);
+
+    @Query("""
+            SELECT d FROM Discount d
+            WHERE :date BETWEEN d.fromDate AND d.toDate
+            AND d.percentage = (
+                SELECT MAX(d2.percentage) FROM Discount d2
+                WHERE d2.product.id = d.product.id
+                AND :date BETWEEN d2.fromDate AND d2.toDate
+            )
+            """)
+    List<Discount> findBestActiveDiscountPerProduct(@Param("date") LocalDate date);
 
 }

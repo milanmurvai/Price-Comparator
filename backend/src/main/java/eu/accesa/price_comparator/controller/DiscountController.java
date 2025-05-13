@@ -3,6 +3,7 @@ package eu.accesa.price_comparator.controller;
 import eu.accesa.price_comparator.dto.discount.BestDiscountDto;
 import eu.accesa.price_comparator.service.DiscountService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,5 +49,20 @@ public class DiscountController {
     ) {
         List<BestDiscountDto> result = discountService.getBestDiscounts(date != null ? date : LocalDate.now());
         return ResponseEntity.ok(result);
+    }
+
+    @Operation(
+            summary = "Get today's newly imported discounts",
+            description = "Returns all discounts that were imported today across all stores."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved today's discounts",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = BestDiscountDto.class)))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping("/today")
+    public ResponseEntity<List<BestDiscountDto>> getTodayDiscounts() {
+        return ResponseEntity.ok(discountService.getTodayDiscounts());
     }
 }
