@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findByIdEndingWith(String suffix);
+
+    List<Product> findAllByName(String name);
+
 }
