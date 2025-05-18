@@ -9,14 +9,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,9 +38,8 @@ public class RecommendationController {
     })
     @GetMapping()
     public ResponseEntity<List<SubstituteProductResponse>> getSubstitutes(
-            @RequestParam String productName,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @Valid @RequestBody SubstituteProductRequest request) {
 
-        return ResponseEntity.ok(recommendationService.getRecommendedSubstitutes(new SubstituteProductRequest(productName, date)));
+        return ResponseEntity.ok(recommendationService.getRecommendedSubstitutes(request));
     }
 }

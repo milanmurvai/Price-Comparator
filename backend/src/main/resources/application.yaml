@@ -1,10 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/price_comparator
-    username: postgres
-    password: admin
+    url: { SPRING_DATASOURCE_URL }
+    username: { SPRING_DATASOURCE_USERNAME }
+    password: { SPRING_DATASOURCE_PASSWORD }
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,9 +24,8 @@ spring:
             enable: true
     host: smtp.gmail.com
     port: 587
-    username: murvaisds@gmail.com
-    password: dqge keyn bscu kzhu
-
+    username: { SPRING_MAIL_USERNAME }
+    password: { SPRING_MAIL_PASSWORD }
 
 
 server:

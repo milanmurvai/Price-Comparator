@@ -99,6 +99,7 @@ public class PriceService {
         return "Alert created successfully for product: " + alertRequest.productName();
     }
 
+    // This method is scheduled to run every day at 9 AM, in order to check for price alerts changes
     @Scheduled(cron = "0 0 9 * * *", zone = "Europe/Bucharest")
     public void checkPriceAlerts() {
         List<PriceAlert> alerts = priceAlertRepo.findAllByTriggeredFalse();

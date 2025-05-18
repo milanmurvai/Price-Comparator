@@ -4,7 +4,6 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import eu.accesa.price_comparator.model.Price;
 import eu.accesa.price_comparator.model.Product;
 import eu.accesa.price_comparator.model.Store;
@@ -14,7 +13,6 @@ import eu.accesa.price_comparator.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -34,7 +32,7 @@ public class PriceCsvImporter {
         this.priceRepo = priceRepo;
     }
 
-    public void importPrices(InputStream inputStream, String storeName, LocalDate date) throws IOException {
+    public void importPrices(InputStream inputStream, String storeName, LocalDate date) {
         Store store = storeRepo.findByName(storeName)
                 .orElseGet(() -> storeRepo.save(new Store(null, storeName)));
 
@@ -60,7 +58,7 @@ public class PriceCsvImporter {
 
                 priceRepo.save(new Price(store, product, quantity, price, currency, date));
             }
-        } catch (CsvValidationException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Invalid CSV format: " + e.getMessage());
         }
     }

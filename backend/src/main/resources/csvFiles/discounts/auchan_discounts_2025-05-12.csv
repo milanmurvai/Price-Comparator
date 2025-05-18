@@ -1,0 +1,9 @@
+product_id;product_name;brand;package_quantity;package_unit;product_category;from_date;to_date;percentage_of_discount
+P003;iaurt grecesc;Olympus;0.4;kg;lactate;2025-05-01;2025-05-07;10
+P009;brânză telemea;Hochland;0.3;kg;lactate;2025-05-01;2025-05-07;10
+P018;piept pui;Agricola;1;kg;carne;2025-05-02;2025-05-08;12
+P035;cafea măcinată;Jacobs;0.25;kg;cafea;2025-05-04;2025-05-10;10
+P041;șampon păr gras;Elseve;400;ml;îngrijire personală;2025-05-02;2025-05-08;12
+P050;vin alb demisec;Recas;0.75;l;băuturi;2025-05-03;2025-05-09;8
+P053;ciocolată neagră 70%;Heidi;100;g;gustări;2025-05-04;2025-05-10;15
+P056;cartofi albi;Generic;1;kg;legume și fructe;2025-05-01;2025-05-07;5

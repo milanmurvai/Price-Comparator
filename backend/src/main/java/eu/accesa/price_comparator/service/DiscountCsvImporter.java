@@ -4,7 +4,6 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import eu.accesa.price_comparator.model.Discount;
 import eu.accesa.price_comparator.model.Product;
 import eu.accesa.price_comparator.model.Store;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -38,7 +36,7 @@ public class DiscountCsvImporter {
         this.discountRepo = discountRepo;
     }
 
-    public void importDiscounts(InputStream inputStream, String storeName, LocalDate date) throws IOException {
+    public void importDiscounts(InputStream inputStream, String storeName, LocalDate date) {
         Store store = storeRepo.findByName(storeName)
                 .orElseThrow(() -> new IllegalArgumentException("Store not found: " + storeName));
 
@@ -102,7 +100,7 @@ public class DiscountCsvImporter {
 
                 discountRepo.save(new Discount(store, product, date, fromDate, toDate, percentage));
             }
-        } catch (CsvValidationException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Invalid CSV format: " + e.getMessage());
         }
     }

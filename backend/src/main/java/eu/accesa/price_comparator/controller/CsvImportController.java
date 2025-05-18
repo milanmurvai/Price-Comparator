@@ -29,14 +29,11 @@ public class CsvImportController {
     @Operation(summary = "Import CSV file", description = "This endpoint is used to import a CSV file.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "CSV file imported successfully",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(type = "string"))),
+                    content = @Content(schema = @Schema(type = "string"))),
             @ApiResponse(responseCode = "400", description = "Invalid CSV file format",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(type = "string"))),
+                    content = @Content(schema = @Schema(type = "string"))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(type = "string")))
+                    content = @Content(schema = @Schema(type = "string")))
     })
     @PostMapping(value = "/csv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> importCsv(@RequestParam("file") MultipartFile file) {

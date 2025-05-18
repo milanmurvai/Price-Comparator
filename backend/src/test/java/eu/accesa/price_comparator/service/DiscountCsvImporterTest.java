@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class DiscountCsvImporterTest {
@@ -32,7 +32,6 @@ class DiscountCsvImporterTest {
     private DiscountCsvImporter importer;
     private Store store;
     private Product product;
-    private Product product2;
 
     @BeforeEach
     void setup() {
@@ -42,13 +41,13 @@ class DiscountCsvImporterTest {
         store = storeRepo.save(store);
 
         product = productRepo.save(new Product("teststore_P001", "lapte", "lactate", "Zuzu", "l"));
-        product2 = productRepo.save(new Product("teststore_P002", "paine", "panificatie", "Panificatie", "buc"));
+        productRepo.save(new Product("teststore_P002", "paine", "panificatie", "Panificatie", "buc"));
     }
 
     @Test
     @DisplayName("No existing discount → inserts new")
     void testInsertNew() throws Exception {
-        InputStream csv = new ClassPathResource("csv/test_insert.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_insert.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         List<Discount> discounts = discountRepo.findAll();
@@ -66,7 +65,7 @@ class DiscountCsvImporterTest {
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 3), 10);
         discountRepo.save(d);
 
-        InputStream csv = new ClassPathResource("csv/test_insert_new_discount_for_diff_product.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_insert_new_discount_for_diff_product.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         List<Discount> discounts = discountRepo.findAll();
@@ -81,7 +80,7 @@ class DiscountCsvImporterTest {
     @Test
     @DisplayName("Discount for unknown product -> ignored")
     void testUnknownProductIgnored() throws Exception {
-        InputStream csv = new ClassPathResource("csv/test_unknown_product.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_unknown_product.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         assertEquals(0, discountRepo.findAll().size());
@@ -94,7 +93,7 @@ class DiscountCsvImporterTest {
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 3), 10);
         discountRepo.save(d);
 
-        InputStream csv = new ClassPathResource("csv/test_insert_new_discount_for_same_product.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_insert_new_discount_for_same_product.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 8));
 
         List<Discount> discounts = discountRepo.findAll();
@@ -113,7 +112,7 @@ class DiscountCsvImporterTest {
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 3), 10);
         discountRepo.save(d);
 
-        InputStream csv = new ClassPathResource("csv/test_insert.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_insert.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         assertEquals(1, discountRepo.findAll().size());
@@ -132,7 +131,7 @@ class DiscountCsvImporterTest {
         discountRepo.save(new Discount(store, product, LocalDate.of(2025, 4, 25),
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 10), 5));
 
-        InputStream csv = new ClassPathResource("csv/test_new_discount_same_as_old.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_new_discount_same_as_old.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         List<Discount> all = discountRepo.findAll();
@@ -152,7 +151,7 @@ class DiscountCsvImporterTest {
         discountRepo.save(new Discount(store, product, LocalDate.of(2025, 4, 25),
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 10), 5));
 
-        InputStream csv = new ClassPathResource("csv/test_inside_split.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_inside_split.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 2));
 
         List<Discount> all = discountRepo.findAll();
@@ -179,7 +178,7 @@ class DiscountCsvImporterTest {
         discountRepo.save(new Discount(store, product, LocalDate.of(2025, 4, 30),
                 LocalDate.of(2025, 5, 2), LocalDate.of(2025, 5, 3), 5));
 
-        InputStream csv = new ClassPathResource("csv/test_included.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_included.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         List<Discount> all = discountRepo.findAll();
@@ -198,7 +197,7 @@ class DiscountCsvImporterTest {
         discountRepo.save(new Discount(store, product, LocalDate.of(2025, 4, 25),
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 5), 5));
 
-        InputStream csv = new ClassPathResource("csv/test_overlap_start.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_overlap_start.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         List<Discount> all = discountRepo.findAll();
@@ -221,7 +220,7 @@ class DiscountCsvImporterTest {
         discountRepo.save(new Discount(store, product, LocalDate.of(2025, 4, 25),
                 LocalDate.of(2025, 5, 4), LocalDate.of(2025, 5, 7), 5));
 
-        InputStream csv = new ClassPathResource("csv/test_overlap_end.csv").getInputStream();
+        InputStream csv = new ClassPathResource("csv/discounts/test_overlap_end.csv").getInputStream();
         importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1));
 
         List<Discount> all = discountRepo.findAll();
@@ -234,6 +233,18 @@ class DiscountCsvImporterTest {
         assertEquals(LocalDate.of(2025, 5, 1), newDiscount.getFromDate());
         assertEquals(LocalDate.of(2025, 5, 5), newDiscount.getToDate());
         assertEquals(12, newDiscount.getPercentage());
+    }
+
+    @Test
+    @DisplayName("Invalid CSV format in discount file → throws exception")
+    void testInvalidDiscountCsvThrowsException() throws Exception {
+        InputStream csv = new ClassPathResource("csv/discounts/invalid_discount.csv").getInputStream();
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                importer.importDiscounts(csv, "teststore", LocalDate.of(2025, 5, 1))
+        );
+
+        assertTrue(ex.getMessage().startsWith("Invalid CSV format"));
     }
 
 }

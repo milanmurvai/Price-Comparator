@@ -10,13 +10,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/prices")
@@ -41,23 +41,8 @@ public class PriceController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = String.class)))
     })
-    @GetMapping("/history")
-    public ResponseEntity<List<PriceHistoryResponse>> getPriceHistory(
-            @RequestParam String productName,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) String store,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String category
-    ) {
-        PriceHistoryRequest request = new PriceHistoryRequest(
-                productName,
-                startDate,
-                endDate,
-                Optional.ofNullable(store),
-                Optional.ofNullable(brand),
-                Optional.ofNullable(category)
-        );
+    @PostMapping("/history")
+    public ResponseEntity<List<PriceHistoryResponse>> getPriceHistory(@Valid @RequestBody PriceHistoryRequest request) {
         return ResponseEntity.ok(priceService.getPriceHistory(request));
     }
 
