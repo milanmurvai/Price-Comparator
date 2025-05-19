@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +36,7 @@ public class RecommendationController {
             @ApiResponse(responseCode = "200", description = "List of substitute products",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = SubstituteProductResponse.class))))
     })
-    @GetMapping()
+    @PostMapping()
     public ResponseEntity<List<SubstituteProductResponse>> getSubstitutes(
             @Valid @RequestBody SubstituteProductRequest request) {
 
